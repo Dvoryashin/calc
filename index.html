@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://kit.fontawesome.com/3e8a6aa84f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style2.css">
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="script.js"></script>
+</head>
+<body>
+      <div id="app">
+
+        <span v-if="zero">0</span>
+        <span v-if="show_fake_primer">{{fake_primer}}</span>
+        <span v-else>{{primer}}</span>
+        <h4 v-if="show_vivodc=true">{{vivod_err}}</h4>
+
+        <button value="back" id="bt19" v-on:click="back(app)">
+          <i class="fa-solid fa-delete-left"></i>
+        </button>
+        <br>
+        <!-- Комментарии здесь для того, чтобы кнопки были прижаты друг к другу. Подробнее: https://codepen.io/anon/pen/megQVe -->
+        <div class="bt_calc">
+          <input type="button" value="7" id="bt1" class="calccifra" v-on:click="calc(7)"><!--
+          --><input type="button" value="8" id="bt2" class="calccifra" v-on:click="calc(8)"><!--
+          --><input type="button" value="9" id="bt3" class="calccifra" v-on:click="calc(9)"><!--
+          --><input type="button" value="/" id="bt15" v-on:click="calc('/')">
+          <br>
+          <input type="button" value="4" id="bt4" class="calccifra" v-on:click="calc(4)"><!--
+          --><input type="button" value="5" id="bt5" class="calccifra" v-on:click="calc(5)"><!--          
+          --><input type="button" value="6" id="bt6" class="calccifra" v-on:click="calc(6)"><!--
+          --><input type="button" value="*" id="bt14" v-on:click="calc('*')">
+          <br>
+          <input type="button" value="1" id="bt7" class="calccifra" v-on:click="calc(1)"><!--
+          --><input type="button" value="2" id="bt8" class="calccifra" v-on:click="calc(2)"><!--
+          --><input type="button" value="3" id="bt9" class="calccifra" v-on:click="calc(3)"><!--
+          --><input type="button" value="-" id="bt13" v-on:click="calc('-')">
+          <br>
+
+          <input type="button" value="0" id="bt12" v-on:click="calc(0)"><!--
+          --><input type="button" value="." id="bt15" v-on:click="calc('.')"><!--
+          --><input type="button" value="=" id="bt17" v-on:click="ravno"><!--
+          --><input type="button" value="+" id="bt11" v-on:click="calc('+')">
+          <br>
+          <input type="button" value="c" id="bt20" v-on:click="c()"><!--
+          --><input type="button" value="(" id="bt18" v-on:click="calc('(')"><!--
+          --><input type="button" value=")" id="bt20" v-on:click="calc(')')"><!--
+          --><input type="button" value="%" id="bt15" v-on:click="procent()">
+          <br>
+        </div>
+    
+      </div>
+      
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            //если zero = true то показывается нолик
+            zero: true,
+            // имитирует пример, который высчитывается через eval. Нужен для того, чтобы знак процента не выводился 
+            fake_primer: "",
+            // настоящий пример, который высчитывается
+            primer: "",
+            //вывод об ошибке
+            vivod_err: "",
+            //
+            show_vivod: false,
+            show_primer: false,
+            show_fake_primer: true,
+        },
+        methods: {
+          calc: function (value) {
+            var primer = this.primer;
+            this.zero = false;
+            this.primer = String(this.primer);
+            this.primer += value;
+            this.fake_primer = String(this.fake_primer);
+            this.fake_primer += value;
+          },
+          procent: function (){
+            this.primer = String(this.primer);
+            this.primer += '/100';
+            this.fake_primer += '/100';
+          },
+          ravno: function (){
+            try {
+              this.primer = eval(this.primer);
+              this.primer = String(this.primer);  
+              this.show_vivod = true;
+              this.fake_primer = this.primer;
+              this.show_primer = true;
+              this.show_fake_primer = false;
+            } catch (err) {
+              this.vivod_err = err;
+              this.vivod_err = String(this.vivod_err);
+              this.vivod_err = this.vivod_err.slice(6);
+            }
+            
+          },
+          back: function (){
+            this.primer = this.primer.slice(0, -1);
+            this.fake_primer = this.fake_primer.slice(0, -1);
+            if(this.primer == ''){
+              this.zero = true;
+            }
+          },  
+          c: function () {
+            this.primer = "";
+            this.vivod = "";
+            this.fake_primer = "";
+            this.zero = true;
+            this.vivod_err = "";
+          },
+        }
+    })
+    document.addEventListener('keydown', (event) => {
+      const keyName = event.key;
+      if(keyName === "/" || keyName === "*" || keyName === "-" || keyName === "+" || keyName === "." || keyName === "0" || keyName === "1" || keyName === "2" || keyName === "3" || keyName === "4" || keyName === "5" || keyName === "6" || keyName === "7" || keyName === "8" || keyName === "9" || keyName === "(" || keyName === ")"){
+        app.calc(keyName);
+        app.zero = false;
+      }
+      if(keyName === '%'){
+        app.procent();
+      }
+      if (keyName === 'Backspace') {
+        app.back();
+      }
+      if(keyName === 'Enter'){
+        app.ravno();     
+      }
+      if(keyName === 'c'){
+        app.c();
+        app.zero = true;
+      }
+    })
+</script>
+</html>

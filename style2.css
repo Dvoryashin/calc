@@ -1,0 +1,30 @@
+body{
+    margin: 0;
+}
+body * {
+    box-sizing: border-box;
+    
+}
+input{
+    position: relative;
+    display: inline-flex;
+    margin: 0 auto;
+    width: 18.81vw;
+    height: 10.81vh;
+    margin: 0.3vw;
+}
+button{
+    position: relative;
+    display: flex;
+    margin: 0 auto;
+    width: 78.35vw;
+    left: -0.2vw;
+}
+.fa-delete-left{
+    margin: 0 auto;
+}
+.bt_calc{
+    position: relative;
+    margin: 0 auto;
+    width: 79.24vw;
+}
